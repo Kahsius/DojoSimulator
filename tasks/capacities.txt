@@ -1,0 +1,35 @@
+- effects
+[ ] +D
+[ ] -D
+[ ] +T
+[ ] -T
+[ ] +HP
+[ ] -HP
+[ ] Stop Talent
+[ ] Stop Maîtrise
+[ ] Récupération
+[ ] Protection
+[ ] Echange P
+[ ] Echange D
+[ ] Copie Talent
+[ ] Copie Maitrise
+[ ] Oppression
+[ ] Pillage
+[ ] Initiative
+[ ] Avantage
+[ ] Vampirisme
+
+- conditions
+[X] courage
+[X] riposte
+[X] victoire
+[X] defaite
+
+- modificateurs
+[ ] patience
+[ ] acharnement
+[ ] contrecoup
+[ ] par glyphe
+
+- cout
+[ ] sacrifice

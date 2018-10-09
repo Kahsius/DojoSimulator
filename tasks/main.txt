@@ -1,0 +1,25 @@
+J1 choisit 4 persos aléatoirement
+    création des persos à chaque fois
+
+J2 choisit 4 persos aléatoirement
+    création des persos à chaque fois
+
+Jusqu'à la fin
+    J1 choisit un prodige
+    J2 choisit un prodige
+    Application talent J1
+    Application talent J2
+
+    si regard, joueur regardé joue un glyphe sur la voie de l'élément adverse
+    J1 complète les Voies
+    J2 complète les Voies
+
+    Les Glyphes sont révélés
+    Attribution des Voies à chaque joueur
+    Définition du gagnant
+    J1 applique ses Voies + Maîtrise
+    J2 applique ses Voies + Maîtrise
+
+    Gagnant inflige ses dégâts et devient premier joueur
+    Glyphes défaussés, Feintes en main
+    Prodige devient injouable
