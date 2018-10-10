@@ -11,6 +11,10 @@ class Capacity:
         self.target = None if not json.get['target'] else json['target']
         self.condition = "none" if not json.get['condition'] else json[
             'condition']
+        self.need_winner = False
+        if json.get['condition']:
+            if json['condition'] in ['victoire', 'defaite']:
+                self.need_winner = True
         self.modification = "none" if not json.get['modification'] else json[
             'modification']
         self.cost = False if not json.get['cost'] else json['cost']
@@ -49,8 +53,8 @@ class Capacity:
     def check_condition(self, owner):
         victoire = self.condition == "victoire" and owner.winner
         defaite = self.condition == "defaite" and not owner.winner
-        courage = self.condition == "courage" and owner.order == 1
-        riposte = self.condition == "riposte" and owner.order == 2
+        courage = self.condition == "courage" and owner.order == 0
+        riposte = self.condition == "riposte" and owner.order == 1
         if victoire or defaite or courage or riposte:
             return True
         else:
@@ -198,3 +202,7 @@ def vampirism(capa):
     t = capa.target
     t.hp = t.hp - value
     t.opp.hp = t.opp.hp + value
+
+def regard(capa):
+    capa.target.has_regard = True
+

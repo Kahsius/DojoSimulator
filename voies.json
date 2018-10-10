@@ -1,0 +1,33 @@
+[
+    {
+        "element": "anar",
+        "capacity": {
+            "target": "owner",
+            "value": 2,
+            "effect": "modif_damage"
+        }
+    },
+    {
+        "element": "sulimo",
+        "capacity": {
+            "target": "owner",
+            "effect": "regard"
+        }
+    },
+    {
+        "element": "ulmo",
+        "capacity": {
+            "target": "owner",
+            "value": 1,
+            "effect": "modif_hp"
+        }
+    },
+    {
+        "element": "wilwar",
+        "capacity": {
+            "target": "owner",
+            "value": 1,
+            "effect": "recuperation"
+        }
+    }
+]

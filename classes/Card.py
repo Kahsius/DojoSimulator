@@ -1,3 +1,5 @@
+from Capacity import Capacity
+
 class Card:
     def __init__(self, json):
         self.name = json['name']
@@ -12,3 +14,8 @@ class Card:
         self.advantaged = False
         self.initiative = False
 
+    def get_p(self):
+        return(self.power_base + self.power)
+
+    def get_d(self):
+        return(self.damage_base + self.damage)
