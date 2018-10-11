@@ -9,6 +9,9 @@
         "effect": "modif_hp",
         "contrecoup": true
     },
+    "mastery": {
+        "effect": "nothing"
+    },
     "element": "anar"
 },
 {
@@ -33,6 +36,9 @@
     "name": "Svenn",
     "power": 8,
     "damage": 2,
+    "talent": {
+        "effect": "nothing"
+    },
     "mastery": {
         "target": "opp",
         "effect": "echange_d"

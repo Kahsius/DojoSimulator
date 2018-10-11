@@ -1,14 +1,15 @@
-from Capacity import Capacity
+from classes.Capacity import Capacity
 
 class Card:
-    def __init__(self, json):
+    def __init__(self, json, owner):
+        self.owner = owner
         self.name = json['name']
         self.power = 0
         self.power_base = json['power']
         self.damage = 0
         self.damage_base = json['damage']
-        self.talent = Capacity(json['talent'])
-        self.mastery = Capacity(json['mastery'])
+        self.talent = Capacity(json['talent'], owner = owner)
+        self.mastery = Capacity(json['mastery'], owner =  owner)
         self.element = json['element']
         self.protected = False
         self.advantaged = False

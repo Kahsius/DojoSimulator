@@ -1,3 +1,5 @@
+from classes.Capacity import Capacity
+
 class Voie:
     def __init__(self, json):
         self.element = json['element']

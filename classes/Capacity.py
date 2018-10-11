@@ -1,31 +1,32 @@
+from pdb import set_trace
 from copy import deepcopy
 from random import randint
 
 
 class Capacity:
-    def __init__(self, json):
+    def __init__(self, json, owner = None):
         methods = globals().copy()
         methods.update(locals())
 
-        self.owner = None
-        self.target = None if not json.get['target'] else json['target']
-        self.condition = "none" if not json.get['condition'] else json[
+        self.owner = owner
+        self.target = None if not json.get('target') else json['target']
+        self.condition = "none" if not json.get('condition') else json[
             'condition']
         self.need_winner = False
-        if json.get['condition']:
+        if json.get('condition'):
             if json['condition'] in ['victoire', 'defaite']:
                 self.need_winner = True
-        self.modification = "none" if not json.get['modification'] else json[
+        self.modification = "none" if not json.get('modification') else json[
             'modification']
-        self.cost = False if not json.get['cost'] else json['cost']
-        self.cost_type = "none" if not json.get['cost_type'] else json[
+        self.cost = False if not json.get('cost') else json['cost']
+        self.cost_type = "none" if not json.get('cost_type') else json[
             'cost_type']
-        self.cost_value = 0 if not json.get['cost_value'] else json[
+        self.cost_value = 0 if not json.get('cost_value') else json[
             'cost_value']
-        self.effect = None if not json.get['effect'] else methods.get[json[
-            'effect']]
-        self.value = 0 if not json.get['value'] else json['value']
-        self.contrecoup = False if not json.get['contrecoup'] else json[
+        self.effect = None if not json.get('effect') else methods.get(json[
+            'effect'])
+        self.value = 0 if not json.get('value') else json['value']
+        self.contrecoup = False if not json.get('contrecoup') else json[
             'contrecoup']
         self.stopped = False
 
@@ -55,7 +56,8 @@ class Capacity:
         defaite = self.condition == "defaite" and not owner.winner
         courage = self.condition == "courage" and owner.order == 0
         riposte = self.condition == "riposte" and owner.order == 1
-        if victoire or defaite or courage or riposte:
+        none = self.condition == "none"
+        if victoire or defaite or courage or riposte or none:
             return True
         else:
             return False
@@ -206,3 +208,5 @@ def vampirism(capa):
 def regard(capa):
     capa.target.has_regard = True
 
+def nothing(capa):
+    pass
