@@ -34,13 +34,15 @@ class Capacity:
         self.data = json
 
     def execute_capacity(self):
+        if self.stopped:
+            print("\t(stoppée)")
         if self.check_condition(self.owner) and not self.stopped:
             if self.cost:
                 if self.cost_type == "glyph":
                     del self.owner.hand[self.owner.get_random_glyphe_index(
                         feinte_allowed=False)]
                 elif self.cost_type == "hp":
-                    self.owner.hp = self.owner.hp - cost_value
+                    self.owner.hp = self.owner.hp - self.cost_value
             self.set_target(self.owner)
             print(self.get_string_effect())
             for i in range(self.get_modification(self.owner)):
@@ -81,7 +83,7 @@ class Capacity:
             return 1
 
     def get_string_effect(self):
-        string = ""
+        string = "\t"
         d = self.data
         string = string if not d.get(
             'contrecoup') else string + "Contrecoup" + " "
@@ -134,9 +136,9 @@ def modif_power_damage(capa):
 
 def modif_hp(capa):
     p = capa.target
-    print("  avant: " + str(p.hp))
+    print("\tP" + str(capa.owner.id) + " avant: " + str(p.hp))
     p.hp = p.hp + capa.value
-    print("  après: " + str(p.hp))
+    print("\tP" + str(capa.owner.id) + " apres: " + str(p.hp))
 
 
 def stop_talent(capa):

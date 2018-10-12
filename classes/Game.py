@@ -69,20 +69,20 @@ class Game:
             # Application des Talents
             for p in self.players:
                 if p.played_prodigy.talent.priority:
-                    print("P" + str(p.id) + " utilise Talent")
+                    print(p.played_prodigy.name + "_" + str(p.id) + " utilise Talent")
                     p.played_prodigy.talent.execute_capacity()
 
             for p in self.players:
                 t = p.played_prodigy.talent
                 if not t.priority and not t.need_winner:
-                    print("P" + str(p.id) + " utilise Talent")
+                    print(p.played_prodigy.name + "_" + str(p.id) + " utilise Talent")
                     p.played_prodigy.talent.execute_capacity()
 
             # Choix des Glyphes
             #TODO prendre en compte le regard
             for p in self.players:
                 p.get_choosen_glyphs()
-                print("P" + str(p.id) + " a joué " + str(p.played_glyphs))
+                print(p.played_prodigy.name + "_" + str(p.id) + " joue " + str(p.played_glyphs))
 
             # Résolution des Voies
             p1, p2 = self.players
@@ -114,7 +114,7 @@ class Game:
             # Application des Talents éventuels
             for p in self.players:
                 if p.played_prodigy.talent.need_winner:
-                    print("P" + str(p.id) + " utilise Talent")
+                    print(p.played_prodigy.name + "_" + str(p.id) + " utilise Talent")
                     p.played_prodigy.talent.execute_capacity()
 
             # Application des effets des Voies
@@ -127,29 +127,29 @@ class Game:
                     p1_win = self.score_voies[j] < 0 and i == 0
                     p2_win = self.score_voies[j] > 0 and i == 1
                     if p1_win or p2_win:
-                        print("P" + str(p.id) + " remporte " + v.element)
+                        print(p.played_prodigy.name + "_" + str(p.id) + " remporte " + v.element)
                         # S'il peut activer sa maîtrise
                         if v.element == p.played_prodigy.element:
-                            print("  et applique sa Maîtrise")
+                            print("\tet applique sa Maitrise")
                             p.played_prodigy.mastery.execute_capacity()
                         # Sinon
                         else:
-                            print("  et applique son effet")
+                            print("\tet applique son effet")
                             v.capacity.owner = p
                             v.capacity.execute_capacity()
 
             # Dégâts du ou des gagnant
             p1, p2 = self.players
             if p1.winner:
-                print("P" + str(p1.id) + " inflige " + str(p1.played_prodigy.get_d()))
+                print(p1.played_prodigy.name + "_" + str(p1.id) + " inflige " + str(p1.played_prodigy.get_d()))
                 p2.hp = p2.hp - p1.played_prodigy.get_d()
             if p2.winner:
-                print("P" + str(p2.id) + " inflige " + str(p2.played_prodigy.get_d()))
+                print(p2.played_prodigy.name + "_" + str(p2.id) + " inflige " + str(p2.played_prodigy.get_d()))
                 p1.hp = p1.hp - p2.played_prodigy.get_d()
 
-            print("P"+ str(p1.id) + " : " + str(p1.hp) + " hp")
-            print("P"+ str(p2.id) + " : " + str(p2.hp) + " hp")
             self.clean_round()
+            print("P"+ str(p1.id) + " : " + str(p1.hp) + " hp - " + str(len(p1.hand)) + " glyphs")
+            print("P"+ str(p2.id) + " : " + str(p2.hp) + " hp - " + str(len(p2.hand)) + " glyphs")
             print('-'*30)
 
         p1, p2 = self.players
