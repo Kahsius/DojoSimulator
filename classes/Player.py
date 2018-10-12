@@ -1,3 +1,4 @@
+import settings
 from pdb import set_trace
 import random
 
@@ -9,10 +10,11 @@ class Player:
         self.played_prodigy = None
         self.prodigies = []
         self.hp = 10
-        self.isFirst = True if order else False
         self.has_regard = False
+        self.winner = False
+        self.id = -1
         
-        glyph = 5 if self.isFirst else 4
+        glyph = 5 if order == 0 else 4
         self.hand = self.hand + [glyph]
         random.shuffle(self.hand)
 
@@ -21,6 +23,8 @@ class Player:
         index = random.randint(0,len(self.prodigies)-1)
         self.played_prodigy = self.prodigies[index]
         del self.prodigies[index]
+        if settings.VERBOSE:
+            print("Player " + str(self.id) + " joue " + self.played_prodigy.name)
 
     def get_random_glyphe_index(self, feinte_allowed = True):
         h = self.hand
@@ -33,7 +37,6 @@ class Player:
         return -1
 
     def get_choosen_glyphs(self):
-        #TODO le max des Glyphes et sur la maitrise
         #TODO faire en sorte que la somme des choix soit proche de P
         p = self.played_prodigy.get_p()
         sum_g = 0
@@ -58,4 +61,16 @@ class Player:
 
         # On mélange les Glyphs joués pour que les Feintes bougent
         random.shuffle(g)
+
+        # On met le max sur la Maîtrise
+        index_g = g.index(max(g))
+        index_m = self.get_index_maitrise()
+        tmp = g[index_g]
+        g[index_g] = g[index_m]
+        g[index_m] = tmp
+
         self.played_glyphs = g
+
+    def get_index_maitrise(self):
+        elements = ['anar', 'sulimo', 'ulmo', 'wilwar']
+        return(elements.index(self.played_prodigy.element))

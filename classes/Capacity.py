@@ -1,10 +1,11 @@
+import settings
 from pdb import set_trace
 from copy import deepcopy
 from random import randint
 
 
 class Capacity:
-    def __init__(self, json, owner = None):
+    def __init__(self, json, owner=None):
         methods = globals().copy()
         methods.update(locals())
 
@@ -23,12 +24,14 @@ class Capacity:
             'cost_type']
         self.cost_value = 0 if not json.get('cost_value') else json[
             'cost_value']
-        self.effect = None if not json.get('effect') else methods.get(json[
-            'effect'])
+        self.effect = None if not json.get('effect') else methods.get(
+            json['effect'])
+        self.priority = False if json['effect'] != 'stop_talent' else True
         self.value = 0 if not json.get('value') else json['value']
         self.contrecoup = False if not json.get('contrecoup') else json[
             'contrecoup']
         self.stopped = False
+        self.data = json
 
     def execute_capacity(self):
         if self.check_condition(self.owner) and not self.stopped:
@@ -39,6 +42,7 @@ class Capacity:
                 elif self.cost_type == "hp":
                     self.owner.hp = self.owner.hp - cost_value
             self.set_target(self.owner)
+            print(self.get_string_effect())
             for i in range(self.get_modification(self.owner)):
                 self.effect(self)
 
@@ -70,11 +74,26 @@ class Capacity:
         elif self.modification == "par_glyphe":
             count = 0
             for glyph in owner.played_glyphs:
-                if glyph.value == 0:
+                if glyph == 0:
                     count = count + 1
             return count
         else:
             return 1
+
+    def get_string_effect(self):
+        string = ""
+        d = self.data
+        string = string if not d.get(
+            'contrecoup') else string + "Contrecoup" + " "
+        if d.get('cost'):
+            string = string + str(d['cost_value']) + " " + d['cost_type'] + " "
+        string = string if not d.get(
+            'condition') else string + d['condition'] + " "
+        string = string if not d.get(
+            'modification') else string + d['modification'] + " "
+        string = string +  d['effect'] + " "
+        string = string if not d.get('value') else string + str(d['value'])
+        return (string)
 
 
 # -------------------------------------------------------------------
@@ -90,7 +109,7 @@ def recuperation(capa):
         if count == v:
             break
         index = l - i
-        if t.played_glyphs[index].value not in (0, 5):
+        if t.played_glyphs[index] not in (0, 5):
             t.hand = t.hand + [t.played_glyphs[index]]
             del t.played_glyphs[index]
             count = count + 1
@@ -115,7 +134,9 @@ def modif_power_damage(capa):
 
 def modif_hp(capa):
     p = capa.target
+    print("  avant: " + str(p.hp))
     p.hp = p.hp + capa.value
+    print("  après: " + str(p.hp))
 
 
 def stop_talent(capa):
@@ -205,8 +226,10 @@ def vampirism(capa):
     t.hp = t.hp - value
     t.opp.hp = t.opp.hp + value
 
+
 def regard(capa):
     capa.target.has_regard = True
+
 
 def nothing(capa):
     pass

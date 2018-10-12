@@ -5,7 +5,7 @@
     "talent": {
         "target": "opp",
         "condition": "victoire",
-        "value": 2,
+        "value": -2,
         "effect": "modif_hp",
         "contrecoup": true
     },
@@ -88,14 +88,14 @@
     },
     "mastery": {
         "target": "opp",
-        "value": 3,
+        "value": -3,
         "effect": "modif_damage"
     },
     "element": "wilwar"
 },
 {
     "name": "Haru",
-    "power": 6,
+    "power": 5,
     "damage": 2,
     "talent": {
         "target": "owner",
@@ -116,7 +116,7 @@
     "talent": {
         "target": "opp",
         "condition": "defaite",
-        "value": 2,
+        "value": -2,
         "effect": "modif_hp"
     },
     "mastery": {
@@ -249,7 +249,7 @@
     "talent": {
         "target": "opp",
         "contrecoup": true,
-        "value": 1,
+        "value": -1,
         "effect": "modif_hp"
     },
     "mastery": {
