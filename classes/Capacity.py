@@ -102,6 +102,7 @@ class Capacity:
 
 
 # Définition de tous les effets possibles
+#TODO vérifier pourquoi ça ne marche pas avec Perséphone T1
 def recuperation(capa):
     v = capa.value
     t = capa.target

@@ -62,12 +62,14 @@ class Player:
         # On mélange les Glyphs joués pour que les Feintes bougent
         random.shuffle(g)
 
-        # On met le max sur la Maîtrise
+        # On met le max soit sur sa Maîtrise soit sur celle adversaire
         index_g = g.index(max(g))
         index_m = self.get_index_maitrise()
+        index_m_opp = self.opp.get_index_maitrise()
+        index = index_m if random.random() < .5 else index_m_opp
         tmp = g[index_g]
-        g[index_g] = g[index_m]
-        g[index_m] = tmp
+        g[index_g] = g[index]
+        g[index] = tmp
 
         self.played_glyphs = g
 
