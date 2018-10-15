@@ -7,7 +7,7 @@ Dojo Simulator is a python script running a set of matches of the prototype game
 ## Usage
 
 Simply clone the project, give the right permission to main.js and run it :
-```bash
+```shell
 ./main.js N_TEST
 ```
 with N_TEST the number of games you want the simulator to play. Default is 10.000 .
