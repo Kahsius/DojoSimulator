@@ -1,4 +1,5 @@
 import json
+import settings
 
 def get_id_prodigy(name):
     with open('data.json') as json_data:
@@ -7,3 +8,7 @@ def get_id_prodigy(name):
             if d[i]['name'] == name:
                 return i
     return -1
+
+def verbose(string):
+    if settings.VERBOSE:
+        print(string)

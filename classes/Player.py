@@ -1,3 +1,4 @@
+import classes.Debug as debug
 import settings
 from pdb import set_trace
 import random
@@ -24,7 +25,7 @@ class Player:
         self.played_prodigy = self.prodigies[index]
         del self.prodigies[index]
         if settings.VERBOSE:
-            print("Player " + str(self.id) + " joue " + self.played_prodigy.name)
+            debug.verbose("Player " + str(self.id) + " joue " + self.played_prodigy.name)
 
     def get_random_glyphe_index(self, feinte_allowed = True):
         h = self.hand
@@ -37,20 +38,31 @@ class Player:
         return -1
 
     def get_choosen_glyphs(self):
-        #TODO faire en sorte que la somme des choix soit proche de P
+
         p = self.played_prodigy.get_p()
-        sum_g = 0
-        g = []
-        l = len(self.hand)
+        # Prend en compte le cas où un Glyphe est déjà joué à cause du regard
+        sum_g = sum(self.played_glyphs)
+        g = self.played_glyphs
+        # Récupère le glyphe éventuellement joué à cause du Regard
+        g_regard = g[0] if self.opp.has_regard else -1
         
+        if self.has_regard:
+            g_opp = self.opp.played_glyphs[self.get_index_maitrise()]
+            # Si a le glyphe juste au dessus sinon feinte
+            g_maitrise = g_opp+1 if g_opp+1 in self.hand else 0
+            g.append(g_maitrise)
+            del self.hand[self.hand.index(g_maitrise)]
+            sum_g = sum_g + g_maitrise
+
         # On complète la main avec des Glyphes non Feinte
+        l = len(self.hand)
         for i in range(l):
             if sum_g + self.hand[l-i-1] <= p and self.hand[l-i-1] != 0 :
                 g = g + [self.hand[l-i-1]]
                 sum_g = sum_g + self.hand[l-i-1]
                 del self.hand[l-i-1]
             # Dans 80% des cas, le dernier Glyphe sera une feinte
-            if len(g) == 3 and random.random() > .2 or len(g) == 4:
+            if len(g) == 3 and random.random() > .2:
                 break
         
         # Quand on peut plus, on complète ce qui manque avec des Feintes
@@ -59,17 +71,36 @@ class Player:
             g = g + [self.hand[index]]
             del self.hand[index]
 
-        # On mélange les Glyphs joués pour que les Feintes bougent
+        # On mélange les Glyphes joués pour que les Feintes bougent
         random.shuffle(g)
 
-        # On met le max soit sur sa Maîtrise soit sur celle adversaire
-        index_g = g.index(max(g))
-        index_m = self.get_index_maitrise()
-        index_m_opp = self.opp.get_index_maitrise()
-        index = index_m if random.random() < .5 else index_m_opp
-        tmp = g[index_g]
-        g[index_g] = g[index]
-        g[index] = tmp
+        # Regard appliqué par l'adversaire, donc max sur Maîtrise self
+        if self.opp.has_regard:
+            # On récupère les index qui faut
+            index_elem_opp = self.opp.get_index_maitrise()
+            index_g_regard = g.index(g_regard)
+            # On cherche le max hors regard
+            index_g = g.index(max(g[0:index_g_regard] + [-1] + g[index_g_regard+1:4]))
+            index_m = self.get_index_maitrise()
+            # On met le max de ce qui reste sur notre maîtrise
+            g[index_g], g[index_m] = g[index_m], g[index_g]
+            # On reprend l'index du regard au cas où
+            index_g_regard = g.index(g_regard)
+            # On met le glyphe de regard sur la bonne voie
+            g[index_elem_opp], g[index_g_regard] = g[index_g_regard], g[index_elem_opp]
+        # Si on a le regard, on met notre glyphe sur notre maitrise
+        elif self.has_regard:
+            index_g = g.index(g_maitrise)
+            index_m = self.get_index_maitrise()
+            g[index_g], g[index_m] = g[index_m], g[index_g]
+            self.has_regard = False
+        # Si personne n'a le regard
+        else:
+            index_g = g.index(max(g))
+            index_m = self.get_index_maitrise()
+            index_m_opp = self.opp.get_index_maitrise()
+            index = index_m if random.random() < .5 else index_m_opp
+            g[index], g[index_g] = g[index_g], g[index]
 
         self.played_glyphs = g
 

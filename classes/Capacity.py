@@ -1,3 +1,4 @@
+import classes.Debug as debug
 import settings
 from pdb import set_trace
 from copy import deepcopy
@@ -26,6 +27,7 @@ class Capacity:
             'cost_value']
         self.effect = None if not json.get('effect') else methods.get(
             json['effect'])
+        self.need_victory = True if json.get('effect') == "modif_damage" else False
         self.priority = False if json['effect'] != 'stop_talent' else True
         self.value = 0 if not json.get('value') else json['value']
         self.contrecoup = False if not json.get('contrecoup') else json[
@@ -35,16 +37,19 @@ class Capacity:
 
     def execute_capacity(self):
         if self.stopped:
-            print("\t(stoppée)")
+            debug.verbose("\t(stoppée)")
         if self.check_condition(self.owner) and not self.stopped:
             if self.cost:
                 if self.cost_type == "glyph":
-                    del self.owner.hand[self.owner.get_random_glyphe_index(
-                        feinte_allowed=False)]
+                    index = self.owner.get_random_glyphe_index(feinte_allowed=False)
+                    if index != -1:
+                        del self.owner.hand[index]
+                    else:
+                        return
                 elif self.cost_type == "hp":
                     self.owner.hp = self.owner.hp - self.cost_value
             self.set_target(self.owner)
-            print(self.get_string_effect())
+            debug.verbose(self.get_string_effect())
             for i in range(self.get_modification(self.owner)):
                 self.effect(self)
 
@@ -102,20 +107,22 @@ class Capacity:
 
 
 # Définition de tous les effets possibles
-#TODO vérifier pourquoi ça ne marche pas avec Perséphone T1
 def recuperation(capa):
     v = capa.value
     t = capa.target
     l = len(t.played_glyphs) - 1
     count = 0
+    debug.verbose("\tmain avant : " + str(t.hand))
     for i in range(l):
         if count == v:
             break
         index = l - i
         if t.played_glyphs[index] not in (0, 5):
+            debug.verbose("\tglyph choisi : " + str(t.played_glyphs[index]))
             t.hand = t.hand + [t.played_glyphs[index]]
             del t.played_glyphs[index]
             count = count + 1
+    debug.verbose("\tmain apres : " + str(t.hand))
 
 
 def modif_damage(capa):
@@ -137,9 +144,9 @@ def modif_power_damage(capa):
 
 def modif_hp(capa):
     p = capa.target
-    print("\tP" + str(capa.owner.id) + " avant: " + str(p.hp))
+    debug.verbose("\tP" + str(capa.owner.id) + " avant: " + str(p.hp))
     p.hp = p.hp + capa.value
-    print("\tP" + str(capa.owner.id) + " apres: " + str(p.hp))
+    debug.verbose("\tP" + str(capa.owner.id) + " apres: " + str(p.hp))
 
 
 def stop_talent(capa):

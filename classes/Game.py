@@ -46,11 +46,10 @@ class Game:
                 self.players[1].prodigies[i] = Card(
                     self.players[1].prodigies[i], owner=self.players[1])
 
-            if settings.VERBOSE:
-                for p in self.players:
-                    for i in range(4):
-                        print("P" + str(p.id) + " a " + p.prodigies[i].name)
-                    print('-'*30)
+            for p in self.players:
+                for i in range(4):
+                    debug.verbose("P" + str(p.id) + " a " + p.prodigies[i].name)
+                debug.verbose('-'*30)
                 
 
         # Génère les voies
@@ -60,29 +59,42 @@ class Game:
         while self.round_can_start():
 
             # Choix des Prodiges
-            self.log.values['duels'].append([])
+            self.log.values['duels'].append(['',''])
             for p in self.players:
                 p.choose_prodigy()
                 dim = len(self.log.values['duels'])
-                self.log.values['duels'][dim - 1].append(p.played_prodigy.name)
+                self.log.values['duels'][dim - 1][p.id] = p.played_prodigy.name
 
             # Application des Talents
             for p in self.players:
                 if p.played_prodigy.talent.priority:
-                    print(p.played_prodigy.name + "_" + str(p.id) + " utilise Talent")
+                    debug.verbose(p.played_prodigy.name + "_" + str(p.id) + " utilise Talent")
                     p.played_prodigy.talent.execute_capacity()
 
             for p in self.players:
                 t = p.played_prodigy.talent
                 if not t.priority and not t.need_winner:
-                    print(p.played_prodigy.name + "_" + str(p.id) + " utilise Talent")
+                    debug.verbose(p.played_prodigy.name + "_" + str(p.id) + " utilise Talent")
                     p.played_prodigy.talent.execute_capacity()
 
+            # Joue Glyphe en cas de Regard
+            p1, p2 = self.players
+            for i in range(2):
+                p = self.players[i]
+                if p.opp.has_regard:
+                    index = p.get_random_glyphe_index()
+                    debug.verbose("Regard: P" + str(p.id)+ " " + str(p.hand[index]) + " sur voie " + str(p.opp.get_index_maitrise()))
+                    p.played_glyphs = p.played_glyphs + [p.hand[index]]
+                    del p.hand[index]
+                    # On fait en sorte que le joueur avec Regard joue forcément deuxième
+                    p1 = p
+                    p2 = self.players[(i+1)%2]
+                    break
+
             # Choix des Glyphes
-            #TODO prendre en compte le regard
-            for p in self.players:
+            for p in [p1, p2]:
                 p.get_choosen_glyphs()
-                print(p.played_prodigy.name + "_" + str(p.id) + " joue " + str(p.played_glyphs))
+                debug.verbose(p.played_prodigy.name + "_" + str(p.id) + " joue " + str(p.played_glyphs))
 
             # Résolution des Voies
             p1, p2 = self.players
@@ -114,7 +126,7 @@ class Game:
             # Application des Talents éventuels
             for p in self.players:
                 if p.played_prodigy.talent.need_winner:
-                    print(p.played_prodigy.name + "_" + str(p.id) + " utilise Talent")
+                    debug.verbose(p.played_prodigy.name + "_" + str(p.id) + " utilise Talent")
                     p.played_prodigy.talent.execute_capacity()
 
             # Application des effets des Voies
@@ -127,30 +139,33 @@ class Game:
                     p1_win = self.score_voies[j] < 0 and i == 0
                     p2_win = self.score_voies[j] > 0 and i == 1
                     if p1_win or p2_win:
-                        print(p.played_prodigy.name + "_" + str(p.id) + " remporte " + v.element)
+                        debug.verbose(p.played_prodigy.name + "_" + str(p.id) + " remporte " + v.element)
                         # S'il peut activer sa maîtrise
-                        if v.element == p.played_prodigy.element:
-                            print("\tet applique sa Maitrise")
+                        element_ok = v.element == p.played_prodigy.element
+                        damage_and_winner = p1.winner and p1.played_prodigy.mastery.need_victory
+                        not_damage = not p1.played_prodigy.mastery.need_victory
+                        if element_ok and (damage_and_winner or not_damage):
+                            debug.verbose("\tet applique sa Maitrise")
                             p.played_prodigy.mastery.execute_capacity()
                         # Sinon
                         else:
-                            print("\tet applique son effet")
+                            debug.verbose("\tet applique son effet")
                             v.capacity.owner = p
                             v.capacity.execute_capacity()
 
             # Dégâts du ou des gagnant
             p1, p2 = self.players
             if p1.winner:
-                print(p1.played_prodigy.name + "_" + str(p1.id) + " inflige " + str(p1.played_prodigy.get_d()))
+                debug.verbose(p1.played_prodigy.name + "_" + str(p1.id) + " inflige " + str(p1.played_prodigy.get_d()))
                 p2.hp = p2.hp - p1.played_prodigy.get_d()
             if p2.winner:
-                print(p2.played_prodigy.name + "_" + str(p2.id) + " inflige " + str(p2.played_prodigy.get_d()))
+                debug.verbose(p2.played_prodigy.name + "_" + str(p2.id) + " inflige " + str(p2.played_prodigy.get_d()))
                 p1.hp = p1.hp - p2.played_prodigy.get_d()
 
             self.clean_round()
-            print("P"+ str(p1.id) + " : " + str(p1.hp) + " hp - " + str(len(p1.hand)) + " glyphs")
-            print("P"+ str(p2.id) + " : " + str(p2.hp) + " hp - " + str(len(p2.hand)) + " glyphs")
-            print('-'*30)
+            debug.verbose("P"+ str(p1.id) + " : " + str(p1.hp) + " hp - " + str(p1.hand))
+            debug.verbose("P"+ str(p2.id) + " : " + str(p2.hp) + " hp - " + str(p2.hand))
+            debug.verbose('-'*30)
 
         p1, p2 = self.players
         if p1.hp > p2.hp:
@@ -158,7 +173,6 @@ class Game:
         elif p1.hp < p2.hp:
             self.log.values['winner'] = p2.id
         self.log.values['hp'] = [p1.hp, p2.hp]
-        set_trace()
         return (self.log)
 
     def round_can_start(self):

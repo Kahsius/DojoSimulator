@@ -1,5 +1,5 @@
 def init():
-    global VERBOSE
-    VERBOSE = True
-    global DEBUG_PRODIGES
-    DEBUG_PRODIGES = ['Persephone']
+    global VERBOSE, DEBUG_PRODIGES
+
+    VERBOSE = False
+    DEBUG_PRODIGES = []

@@ -1,7 +1,7 @@
 [{
     "name": "Alissonne",
     "power": 8,
-    "damage": 8,
+    "damage": 6,
     "talent": {
         "target": "opp",
         "condition": "victoire",
@@ -17,7 +17,7 @@
 {
     "name": "Batsu",
     "power": 7,
-    "damage": 3,
+    "damage": 2,
     "talent": {
         "target": "owner",
         "condition": "riposte",
@@ -35,9 +35,11 @@
 {
     "name": "Svenn",
     "power": 8,
-    "damage": 2,
+    "damage": 3,
     "talent": {
-        "effect": "nothing"
+        "target": "owner",
+        "value": 2,
+        "effect": "modif_damage"
     },
     "mastery": {
         "target": "opp",
@@ -48,7 +50,7 @@
 {
     "name": "Amalrik",
     "power": 6,
-    "damage": 2,
+    "damage": 1,
     "talent": {
         "target": "owner",
         "value": 3,
@@ -95,8 +97,8 @@
 },
 {
     "name": "Haru",
-    "power": 5,
-    "damage": 2,
+    "power": 6,
+    "damage": 4,
     "talent": {
         "target": "owner",
         "effect": "initiative"
@@ -111,7 +113,7 @@
 },
 {
     "name": "Persephone",
-    "power": 6,
+    "power": 7,
     "damage": 2,
     "talent": {
         "target": "opp",
@@ -209,7 +211,7 @@
 {
     "name": "Rubis",
     "power": 6,
-    "damage": 3,
+    "damage": 2,
     "talent": {
         "target": "opp",
         "value": -2,
@@ -229,7 +231,7 @@
 {
     "name": "Aurore",
     "power": 6,
-    "damage": 0,
+    "damage": 2,
     "talent": {
         "target": "owner",
         "effect": "avantage"
