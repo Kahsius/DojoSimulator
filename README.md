@@ -12,6 +12,8 @@ Simply clone the project, give the right permission to main.js and run it :
 ```
 with N_TEST the number of games you want the simulator to play. Default is 10.000 .
 
+If you want to modify a character, you have to write in data.json. You can create, modify or remove any character you want.
+
 ## Results
 
 After the N_TEST games, the script displays the results in terms of win rate of each character, either by round or by game.
