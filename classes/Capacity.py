@@ -233,8 +233,8 @@ def avantage(capa):
 def vampirism(capa):
     v = capa.value
     t = capa.target
-    t.hp = t.hp - value
-    t.opp.hp = t.opp.hp + value
+    t.hp = t.hp - v
+    t.opp.hp = t.opp.hp + v
 
 
 def regard(capa):
