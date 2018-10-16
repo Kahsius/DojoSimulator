@@ -16,7 +16,7 @@ class Game:
         self.players = []
         self.score_voies = []
         self.voies = []
-        self.round = 0
+        self.turn = 0
         self.log = Log()
 
         # Creation des joueurs
@@ -47,6 +47,7 @@ class Game:
                     self.players[1].prodigies[i], owner=self.players[1])
 
             for p in self.players:
+                p.define_prodigies_order()
                 for i in range(4):
                     debug.verbose("P" + str(p.id) + " a " + p.prodigies[i].name)
                 debug.verbose('-'*30)
@@ -58,10 +59,12 @@ class Game:
     def run(self):
         while self.round_can_start():
 
+            debug.verbose("Round : " + str(self.turn))
+
             # Choix des Prodiges
             self.log.values['duels'].append(['',''])
             for p in self.players:
-                p.choose_prodigy()
+                p.choose_prodigy(self.turn)
                 dim = len(self.log.values['duels'])
                 self.log.values['duels'][dim - 1][p.id] = p.played_prodigy.name
 
@@ -94,6 +97,9 @@ class Game:
             # Choix des Glyphes
             for p in [p1, p2]:
                 p.get_choosen_glyphs()
+                for i in range(4):
+                    if p.played_glyphs[i] > 0:
+                        self.log.values['glyphs'][p.id][i] = self.log.values['glyphs'][p.id][i] + 1
                 debug.verbose(p.played_prodigy.name + "_" + str(p.id) + " joue " + str(p.played_glyphs))
 
             # Résolution des Voies
@@ -167,12 +173,18 @@ class Game:
             debug.verbose("P"+ str(p2.id) + " : " + str(p2.hp) + " hp - " + str(p2.hand))
             debug.verbose('-'*30)
 
+        # +1HP/Glyphe restant en main
+        for p in self.players:
+            for v in p.hand:
+                p.hp = p.hp + v/max(v,1)
+
         p1, p2 = self.players
         if p1.hp > p2.hp:
             self.log.values['winner'] = p1.id
         elif p1.hp < p2.hp:
             self.log.values['winner'] = p2.id
         self.log.values['hp'] = [p1.hp, p2.hp]
+        self.log.values['glyphs_winner'] = self.log.values['glyphs'][self.log.values['winner']]
         return (self.log)
 
     def round_can_start(self):
@@ -183,7 +195,7 @@ class Game:
                 return False
 
         # Si les 4 Prodiges ont été joués
-        if not len(self.players[0].prodigies):
+        if self.turn == 4:
             return False
 
         # Sinon
@@ -205,6 +217,7 @@ class Game:
             p2.order = 0
             p1.order = 1
 
+        self.turn = self.turn + 1
         self.score_voies = []
 
     def get_winner(self):

@@ -10,6 +10,7 @@ class Player:
         self.played_glyphs = []
         self.played_prodigy = None
         self.prodigies = []
+        self.prodigies_order = []
         self.hp = 10
         self.has_regard = False
         self.winner = False
@@ -20,10 +21,27 @@ class Player:
         random.shuffle(self.hand)
 
 
-    def choose_prodigy(self):
-        index = random.randint(0,len(self.prodigies)-1)
+    def define_prodigies_order(self):
+        order = [-1]*4
+        for turn in range(3,-1,-1):
+            chosen = False
+            for p in self.prodigies:
+                index_p = self.prodigies.index(p)
+                if turn in p.turn and not index_p in order:
+                    order[turn] = self.prodigies.index(p)
+                    chosen = True
+            if not chosen:
+                for p in self.prodigies:
+                    index_p = self.prodigies.index(p)
+                    if not index_p in order:
+                        order = order + [self.prodigies.index(p)]
+        self.prodigies_order = order
+
+
+    def choose_prodigy(self, turn):
+        # On récupère l'index
+        index = self.prodigies_order[turn]
         self.played_prodigy = self.prodigies[index]
-        del self.prodigies[index]
         if settings.VERBOSE:
             debug.verbose("Player " + str(self.id) + " joue " + self.played_prodigy.name)
 

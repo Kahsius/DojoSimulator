@@ -10,6 +10,8 @@ class Card:
         self.damage_base = json['damage']
         self.talent = Capacity(json['talent'], owner = owner)
         self.mastery = Capacity(json['mastery'], owner =  owner)
+        self.turn = [] + self.talent.turn + self.mastery.turn
+        self.turn = [] if len(self.turn) == 4 else self.turn
         self.element = json['element']
         self.protected = False
         self.advantaged = False

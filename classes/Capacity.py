@@ -20,6 +20,11 @@ class Capacity:
                 self.need_winner = True
         self.modification = "none" if not json.get('modification') else json[
             'modification']
+        self.turn = []
+        if self.modification == 'patience':
+            self.turn = [2,3]
+        elif self.modification == 'acharnement':
+            self.turn = [0,1]
         self.cost = False if not json.get('cost') else json['cost']
         self.cost_type = "none" if not json.get('cost_type') else json[
             'cost_type']

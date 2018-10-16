@@ -7,3 +7,5 @@ class Log:
         self.values['duels'] = []
         self.values['ko'] = False
         self.values['hp'] = [0, 0]
+        self.values['glyphs'] = [[0,0,0,0],[0,0,0,0]]
+        self.values['glyphs_winner'] = []

@@ -57,4 +57,5 @@ def get_names():
     
     return(names)
 
+# def glyphs_win_rate(results):
 
