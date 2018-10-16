@@ -2,7 +2,7 @@
     {
       "name": "Alissonne",
       "power": 8,
-      "damage": 6,
+      "damage": 7,
       "talent": {
           "target": "opp",
           "condition": "victoire",
@@ -51,7 +51,7 @@
   {
       "name": "Amalrik",
       "power": 6,
-      "damage": 1,
+      "damage": 2,
       "talent": {
           "target": "owner",
           "value": 3,
