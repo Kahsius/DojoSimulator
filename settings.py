@@ -1,5 +1,7 @@
 def init():
-    global VERBOSE, DEBUG_PRODIGES
+    global VERBOSE, DEBUG_PRODIGES, TOLERANCE_COLOR, BASE_HP
 
     VERBOSE = False
     DEBUG_PRODIGES = ['Faine']
+    TOLERANCE_COLOR = 0.05
+    BASE_HP = 15

@@ -24,6 +24,7 @@ class Game:
             self.players.append(Player(i))
             self.players[i].order = i
             self.players[i].id = i
+            self.players[i].hp = settings.BASE_HP
 
         # Définition des opposants
         for i in range(2):
