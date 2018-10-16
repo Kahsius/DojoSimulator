@@ -36,7 +36,7 @@ if __name__ == '__main__':
     for i in range(len(wr['names'])):
         name = wr['names'][i]
         score = wr['rates'][i]
-        color = '\033[31m' if score > .5 else '\033[32m'
+        color = '\033[31m' if score < .5 else '\033[32m'
         string = '{} ' + '-'*(13-len(name)) + color + ' {:04.3f}\033[0m'
         string = string.format(name, score)
         print(string)
