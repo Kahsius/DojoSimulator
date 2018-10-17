@@ -58,4 +58,7 @@ def get_names():
     return(names)
 
 # def glyphs_win_rate(results):
+# TODO: glyphs_win_rate
 
+def ko_rate(results):
+    return(sum(map(lambda o: o['ko'], results))/len(results))

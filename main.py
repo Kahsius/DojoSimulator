@@ -27,7 +27,7 @@ if __name__ == '__main__':
     print("Test running...")
     pool = Pool()
     results = pool.map(get_results, range(N_TEST))
-    print("... done")
+    print("... done\n")
 
     # Start analysis
     # print("Win Rate par round")
@@ -44,3 +44,5 @@ if __name__ == '__main__':
         string = '{} ' + '-'*(13-len(name)) + color + ' {:04.3f}\033[0m'
         string = string.format(name, score)
         print(string)
+
+    print("\nKo rate : {:03.2f}".format(anzr.ko_rate(results)))
