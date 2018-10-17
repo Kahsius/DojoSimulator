@@ -1,4 +1,4 @@
-import classes.Debug as debug
+import Debug as debug
 import settings
 from pdb import set_trace
 import random

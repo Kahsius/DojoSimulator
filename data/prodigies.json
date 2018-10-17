@@ -123,7 +123,7 @@
           "effect": "modif_hp"
       },
       "mastery": {
-          "target": "opp",
+          "target": "owner",
           "condition": "defaite",
           "value": 2,
           "effect": "recuperation"

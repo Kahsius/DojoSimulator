@@ -3,12 +3,12 @@ import random
 import json
 import pdb
 from pdb import set_trace
-from classes.Player import Player
-from classes.Card import Card
-from classes.Log import Log
-from classes.Voie import Voie
+from Player import Player
+from Card import Card
+from Log import Log
+from Voie import Voie
 
-import classes.Debug as debug
+import Debug as debug
 
 
 class Game:
@@ -31,7 +31,7 @@ class Game:
             self.players[i].opp = self.players[(i + 1) % 2]
 
         # Generate Prodigies for each player
-        with open('data.json') as json_data:
+        with open('data/prodigies.json') as json_data:
             d = json.load(json_data)
             selected = [d[i] for i in random.sample(range(len(d)), 8)]
 
@@ -247,7 +247,7 @@ class Game:
                     return (2)
 
     def generate_voies(self):
-        with open('voies.json') as json_data:
+        with open('data/voies.json') as json_data:
             d = json.load(json_data)
             for i in range(len(d)):
                 self.voies = self.voies + [Voie(d[i])]

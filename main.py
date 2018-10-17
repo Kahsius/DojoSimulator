@@ -1,11 +1,16 @@
 #!/usr/bin/python3
 
+import sys
+from os import getcwd
+sys.path.insert(0, getcwd()+'/scripts')
+
+import settings
+import analyzer as anzr
+
 from pdb import set_trace
 from multiprocessing import Pool
-import sys
-import settings
-from classes.Game import Game
-import classes.analyzer as anzr
+from Game import Game
+
 
 def get_results(i):
     g = Game()

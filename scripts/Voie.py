@@ -1,4 +1,4 @@
-from classes.Capacity import Capacity
+from Capacity import Capacity
 
 class Voie:
     def __init__(self, json):

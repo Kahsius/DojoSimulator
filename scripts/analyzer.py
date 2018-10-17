@@ -50,7 +50,7 @@ def win_rates_global(results):
 
 def get_names():
     names = []
-    with open('data.json') as json_data:
+    with open('data/prodigies.json') as json_data:
         d = json.load(json_data)
         for prodigy in d:
             names = names + [prodigy['name']]

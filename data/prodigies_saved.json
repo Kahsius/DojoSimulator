@@ -1,0 +1,19 @@
+[
+  {
+      "name": "Reventlov",
+      "power": 3,
+      "damage": 2,
+      "talent": {
+          "target": "opp",
+          "value": -3,
+          "effect": "modif_power"
+      },
+      "mastery": {
+          "target": "owner",
+          "value": 2,
+          "effect": "modif_damage",
+          "modification": "par_glyphe"
+      },
+      "element": "ulmo"
+  },
+]
