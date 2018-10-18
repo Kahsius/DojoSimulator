@@ -35,8 +35,8 @@
   },
   {
       "name": "Svenn",
-      "power": 8,
-      "damage": 2,
+      "power": 7,
+      "damage": 3,
       "talent": {
           "target": "owner",
           "value": 1,
@@ -67,7 +67,7 @@
   {
       "name": "Asato",
       "power": 7,
-      "damage": 3,
+      "damage": 2,
       "talent": {
           "target": "owner",
           "effect": "protection"

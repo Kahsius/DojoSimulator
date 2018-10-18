@@ -7,6 +7,7 @@ sys.path.insert(0, getcwd()+'/scripts')
 import settings
 import analyzer as anzr
 
+from subprocess import run
 from pdb import set_trace
 from multiprocessing import Pool
 from Game import Game
@@ -18,6 +19,7 @@ def get_results(i):
     return(results)
 
 if __name__ == '__main__':
+    run('clear')
     settings.init()
 
     N_TEST = 10000
@@ -37,12 +39,50 @@ if __name__ == '__main__':
 
     print("Win Rate par partie")
     wr = anzr.win_rates_global(results)
+    ok = []
+    notok = []
     for i in range(len(wr['names'])):
         name = wr['names'][i]
         score = wr['rates'][i]
-        color = '\033[31m' if abs(score - .5) > settings.TOLERANCE_COLOR  else '\033[32m'
-        string = '{} ' + '-'*(13-len(name)) + color + ' {:04.3f}\033[0m'
-        string = string.format(name, score)
-        print(string)
+        if abs(score - .5) > settings.TOLERANCE_COLOR:
+            color = '\033[31m'
+            string = '\t{} ' + '-'*(13-len(name)) + color + ' {:04.3f}\033[0m'
+            string = string.format(name, score)
+            notok.append(string)
+        else:
+            color = '\033[32m'
+            string = '\t{} ' + '-'*(13-len(name)) + color + ' {:04.3f}\033[0m'
+            string = string.format(name, score)
+            ok.append(string)
+    ok.sort()
+    notok.sort()
+    print("-- OK")
+    for s in ok:
+        print(s)
+    print("-- not OK")
+    for s in notok:
+        print(s)
 
     print("\nKo rate : {:03.2f}".format(anzr.ko_rate(results)))
+
+    print("\nKo rate par Prodige :")
+    names = anzr.get_names()
+    kos_prodigies = anzr.prodigies_lead_to_ko(results)
+    strings = []
+    for i in range(len(names)):
+        string = '\t{} ' + '-'*(13-len(names[i])) + ' {:04.3f}'
+        string = string.format(names[i], kos_prodigies[i])
+        strings.append(string)
+    strings.sort()
+    for s in strings:
+        print(s)
+
+    mean_glyphs = anzr.glyphs_win_rate(results)
+    print("\nMean Glyphs par win status :")
+    elements = ['anar', 'sulimo', 'ulmo', 'wilwar']
+    print("\tElement" + " "*5 + "Winner" + " "*3 + "Loser")
+    for i in range(4):
+        elem = elements[i]
+        string = '\t{}   ' + ' '*(9-len(elem)) + '{:03.2f}' + ' '*5 + '{:03.2f}'
+        print(string.format(elem, mean_glyphs[0][i], mean_glyphs[1][i]))
+

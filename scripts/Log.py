@@ -9,3 +9,4 @@ class Log:
         self.values['hp'] = [0, 0]
         self.values['glyphs'] = [[0,0,0,0],[0,0,0,0]]
         self.values['glyphs_winner'] = []
+        self.values['end_turn'] = 0

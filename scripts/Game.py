@@ -184,8 +184,11 @@ class Game:
             self.log.values['winner'] = p1.id
         elif p1.hp < p2.hp:
             self.log.values['winner'] = p2.id
+
         self.log.values['hp'] = [p1.hp, p2.hp]
         self.log.values['glyphs_winner'] = self.log.values['glyphs'][self.log.values['winner']]
+        self.log.values['end_turn'] = self.turn
+
         return (self.log)
 
     def round_can_start(self):

@@ -1,3 +1,4 @@
+from pdb import set_trace
 import json
 import numpy as np
 
@@ -57,8 +58,29 @@ def get_names():
     
     return(names)
 
-# def glyphs_win_rate(results):
-# TODO: glyphs_win_rate
+def glyphs_win_rate(results):
+    glyphs_winners = [r['glyphs'][r['winner']] for r in results]
+    glyphs_winners = map(lambda r: np.array(r), glyphs_winners)
+    glyphs_winners = np.mean(list(glyphs_winners), axis=0)
+
+    glyphs_losers = [r['glyphs'][(r['winner']+1)%2] for r in results]
+    glyphs_losers = map(lambda r: np.array(r), glyphs_losers)
+    glyphs_losers = np.mean(list(glyphs_losers), axis=0)
+
+    return([glyphs_winners, glyphs_losers])
 
 def ko_rate(results):
     return(sum(map(lambda o: o['ko'], results))/len(results))
+
+def prodigies_lead_to_ko(results):
+    names = get_names()
+    kos = np.zeros(len(names))
+    totals = np.zeros(len(names))
+    for r in results:
+        for p in r['winners_prodigies']:
+            index = names.index(p)
+            totals[index] = totals[index] + 1
+            if r['ko'] and r['winners_prodigies'].index(p) < r['end_turn']:
+                kos[index] = kos[index] + 1
+    return(kos/totals)
+

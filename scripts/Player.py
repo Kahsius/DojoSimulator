@@ -45,6 +45,7 @@ class Player:
         if settings.VERBOSE:
             debug.verbose("Player " + str(self.id) + " joue " + self.played_prodigy.name)
 
+
     def get_random_glyphe_index(self, feinte_allowed = True):
         h = self.hand
         if feinte_allowed:
