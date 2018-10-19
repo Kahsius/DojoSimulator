@@ -8,12 +8,12 @@ Dojo Simulator is a python script running a set of matches of the prototype game
 
 Simply clone the project, give the right permission to main.js and run it :
 ```shell
-./main.js N_TEST
+python main.js -n N_TEST -v
 ```
-with N_TEST the number of games you want the simulator to play. Default is 10.000 .
+with -n N_TEST the number of games you want the simulator to play (default 10 000) and -v a flag to specify if the simulator should display all the played games. It's preferable to keep N_TEST low when this flag is up.
 
-If you want to modify a character, you have to write in data.json. You can create, modify or remove any character you want.
+If you want to modify a character, you have to write in data/prodigies.json. You can create, modify or remove any character you want. You can even modify the effects of the Voies in data/voies.json.
 
 ## Results
 
-After the N_TEST games, the script displays the results in terms of win rate of each character, either by round or by game.
+After the N_TEST games, the script displays various statistical results on the prodigies and the voies.
