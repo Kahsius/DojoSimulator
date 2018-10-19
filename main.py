@@ -5,7 +5,7 @@ from os import getcwd
 sys.path.insert(0, getcwd()+'/scripts')
 
 import settings
-settings.init()
+settings.init(sys.argv)
 
 import analyzer as anzr
 
@@ -23,13 +23,9 @@ def get_results(i):
 if __name__ == '__main__':
     # run('clear')
 
-    N_TEST = 10000
-    if(len(sys.argv)) > 1:
-        N_TEST = int(sys.argv[1])
-
     print("Test running...")
     pool = Pool()
-    results = pool.map(get_results, range(N_TEST))
+    results = pool.map(get_results, range(settings.N_TEST))
     print("... done\n")
 
     # Start analysis
@@ -64,9 +60,9 @@ if __name__ == '__main__':
     for s in notok:
         print(s)
 
-    print("\nKo rate : {:03.2f}".format(anzr.ko_rate(results)))
+    print("\nGlobal KO rate : {:03.2f}".format(anzr.ko_rate(results)))
 
-    print("\nKo rate par Prodige :")
+    print("\nKO rate par Prodige :")
     names = anzr.get_names()
     kos_prodigies = anzr.prodigies_lead_to_ko(results)
     strings = []

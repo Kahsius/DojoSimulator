@@ -30,11 +30,13 @@ class Player:
                 if turn in p.turn and not index_p in order:
                     order[turn] = self.prodigies.index(p)
                     chosen = True
+                    break
             if not chosen:
                 for p in self.prodigies:
                     index_p = self.prodigies.index(p)
                     if not index_p in order:
-                        order = order + [self.prodigies.index(p)]
+                        order[turn] = self.prodigies.index(p)
+                        break
         self.prodigies_order = order
 
 
@@ -118,7 +120,7 @@ class Player:
             index_g = g.index(max(g))
             index_m = self.get_index_maitrise()
             index_m_opp = self.opp.get_index_maitrise()
-            index = index_m if random.random() < .5 else index_m_opp
+            index = index_m if random.random() > settings.P_COUNTER_OPP_MASTERY else index_m_opp
             g[index], g[index_g] = g[index_g], g[index]
 
         self.played_glyphs = g

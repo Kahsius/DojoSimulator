@@ -38,6 +38,7 @@ class Game:
             # Pour debugger des persos en particulier
             for i in range(len(settings.DEBUG_PRODIGES)):
                 selected[i] = d[debug.get_id_prodigy(settings.DEBUG_PRODIGES[i])]
+                random.shuffle(selected)
 
             self.players[0].prodigies = selected[0:4]
             self.players[1].prodigies = selected[4:8]
@@ -73,13 +74,13 @@ class Game:
             for p in self.players:
                 if p.played_prodigy.talent.priority:
                     debug.verbose(p.played_prodigy.name + "_" + str(p.id) + " utilise Talent")
-                    p.played_prodigy.talent.execute_capacity()
+                    p.played_prodigy.talent.execute_capacity(self.turn)
 
             for p in self.players:
                 t = p.played_prodigy.talent
                 if not t.priority and not t.need_winner:
                     debug.verbose(p.played_prodigy.name + "_" + str(p.id) + " utilise Talent")
-                    p.played_prodigy.talent.execute_capacity()
+                    p.played_prodigy.talent.execute_capacity(self.turn)
 
             # Joue Glyphe en cas de Regard
             p1, p2 = self.players
@@ -134,7 +135,7 @@ class Game:
             for p in self.players:
                 if p.played_prodigy.talent.need_winner:
                     debug.verbose(p.played_prodigy.name + "_" + str(p.id) + " utilise Talent")
-                    p.played_prodigy.talent.execute_capacity()
+                    p.played_prodigy.talent.execute_capacity(self.turn)
 
             # Application des effets des Voies
             for i in range(2):
@@ -149,16 +150,18 @@ class Game:
                         debug.verbose(p.played_prodigy.name + "_" + str(p.id) + " remporte " + v.element)
                         # S'il peut activer sa maîtrise
                         element_ok = v.element == p.played_prodigy.element
-                        damage_and_winner = p1.winner and p1.played_prodigy.mastery.need_victory
-                        not_damage = not p1.played_prodigy.mastery.need_victory
-                        if element_ok and (damage_and_winner or not_damage):
+                        damage = p.played_prodigy.mastery.need_victory
+                        damage_and_winner = p.winner and damage
+                        not_stopped = not p.played_prodigy.mastery.stopped
+                        if element_ok and (damage_and_winner or not damage) and not_stopped:
                             debug.verbose("\tet applique sa Maitrise")
-                            p.played_prodigy.mastery.execute_capacity()
+                            p.played_prodigy.mastery.execute_capacity(self.turn)
+                            self.log.values['mastery_activated'][p.id][self.turn] = True
                         # Sinon
                         else:
                             debug.verbose("\tet applique son effet")
                             v.capacity.owner = p
-                            v.capacity.execute_capacity()
+                            v.capacity.execute_capacity(self.turn)
 
             # Dégâts du ou des gagnant
             p1, p2 = self.players

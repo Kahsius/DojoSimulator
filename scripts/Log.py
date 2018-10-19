@@ -10,3 +10,4 @@ class Log:
         self.values['glyphs'] = [[0,0,0,0],[0,0,0,0]]
         self.values['glyphs_winner'] = []
         self.values['end_turn'] = 0
+        self.values['mastery_activated'] = [[False]*4, [False]*4]

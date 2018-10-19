@@ -40,7 +40,7 @@ class Capacity:
         self.stopped = False
         self.data = json
 
-    def execute_capacity(self):
+    def execute_capacity(self, turn):
         if self.stopped:
             debug.verbose("\t(stoppée)")
         if self.check_condition(self.owner) and not self.stopped:
@@ -55,7 +55,7 @@ class Capacity:
                     self.owner.hp = self.owner.hp - self.cost_value
             self.set_target(self.owner)
             debug.verbose(self.get_string_effect())
-            for i in range(self.get_modification(self.owner)):
+            for i in range(self.get_modification(self.owner, turn)):
                 self.effect(self)
 
     def set_target(self, owner):
@@ -78,11 +78,11 @@ class Capacity:
         else:
             return False
 
-    def get_modification(self, owner):
+    def get_modification(self, owner, turn):
         if self.modification == "patience":
-            return 3 - len(owner.prodigies)
+            return turn
         elif self.modification == "acharnement":
-            return len(owner.prodigies)
+            return 3 - turn
         elif self.modification == "par_glyphe":
             count = 0
             for glyph in owner.played_glyphs:
@@ -117,7 +117,7 @@ def recuperation(capa):
     t = capa.target
     l = len(t.played_glyphs) - 1
     count = 0
-    debug.verbose("\tmain avant : " + str(t.hand))
+    #debug.verbose("\tmain avant : " + str(t.hand))
     for i in range(l):
         if count == v:
             break
@@ -127,7 +127,7 @@ def recuperation(capa):
             t.hand = t.hand + [t.played_glyphs[index]]
             del t.played_glyphs[index]
             count = count + 1
-    debug.verbose("\tmain apres : " + str(t.hand))
+    #debug.verbose("\tmain apres : " + str(t.hand))
 
 
 def modif_damage(capa):
@@ -149,9 +149,9 @@ def modif_power_damage(capa):
 
 def modif_hp(capa):
     p = capa.target
-    debug.verbose("\tP" + str(capa.owner.id) + " avant: " + str(p.hp))
+    #debug.verbose("\tP" + str(capa.owner.id) + " avant: " + str(p.hp))
     p.hp = p.hp + capa.value
-    debug.verbose("\tP" + str(capa.owner.id) + " apres: " + str(p.hp))
+    #debug.verbose("\tP" + str(capa.owner.id) + " apres: " + str(p.hp))
 
 
 def stop_talent(capa):
