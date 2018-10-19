@@ -6,7 +6,7 @@ def init(argv):
     global COLOR_RED, COLOR_BLUE, COLOR_BLACK
 
     DEBUG_PRODIGES = ['Faine']
-    TOLERANCE_COLOR = 0.05
+    TOLERANCE_COLOR = 0.04
     BASE_HP = 12
     P_COUNTER_OPP_MASTERY = .3
 

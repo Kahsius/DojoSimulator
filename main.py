@@ -75,7 +75,7 @@ if __name__ == '__main__':
         print(s)
 
     mean_glyphs = anzr.glyphs_win_rate(results)
-    print("\nMean Glyphs par win status :")
+    print("\nNombre moyen d'activation de chaque voie:")
     elements = ['anar', 'sulimo', 'ulmo', 'wilwar']
     print("\tElement" + " "*5 + "Winner" + " "*3 + "Loser")
     for i in range(4):
@@ -83,3 +83,6 @@ if __name__ == '__main__':
         string = '\t{}   ' + ' '*(9-len(elem)) + '{:03.2f}' + ' '*5 + '{:03.2f}'
         print(string.format(elem, mean_glyphs[0][i], mean_glyphs[1][i]))
 
+    mean_mastery_activation = anzr.rate_mastery(results)
+    print("\nActivation de maîtrise moyenne par combat")
+    #TODO débugger l'analyzer de mastery_activated

@@ -84,3 +84,17 @@ def prodigies_lead_to_ko(results):
                 kos[index] = kos[index] + 1
     return(kos/totals)
 
+def rate_mastery(results):
+    names = get_names()
+    activated = np.zeros(len(names))
+    totals = np.zeros(len(names))
+    for r in results:
+        for i in range(len(r['duels'])):
+            for j in range(2):
+                p = r['duels'][i][j]
+                index = names.index(p)
+                is_activated = r['mastery_activated'][j][i]
+                activated[index] = activated[index] + is_activated
+                totals[index] = totals[index] + 1
+    return(activated/totals)
+
