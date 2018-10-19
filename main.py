@@ -5,6 +5,8 @@ from os import getcwd
 sys.path.insert(0, getcwd()+'/scripts')
 
 import settings
+settings.init()
+
 import analyzer as anzr
 
 from subprocess import run
@@ -19,8 +21,7 @@ def get_results(i):
     return(results)
 
 if __name__ == '__main__':
-    run('clear')
-    settings.init()
+    # run('clear')
 
     N_TEST = 10000
     if(len(sys.argv)) > 1:
@@ -45,13 +46,13 @@ if __name__ == '__main__':
         name = wr['names'][i]
         score = wr['rates'][i]
         if abs(score - .5) > settings.TOLERANCE_COLOR:
-            color = '\033[31m'
-            string = '\t{} ' + '-'*(13-len(name)) + color + ' {:04.3f}\033[0m'
+            color = settings.COLOR_RED
+            string = '\t{} ' + '-'*(13-len(name)) + color + ' {:04.3f}' + settings.COLOR_BLACK
             string = string.format(name, score)
             notok.append(string)
         else:
-            color = '\033[32m'
-            string = '\t{} ' + '-'*(13-len(name)) + color + ' {:04.3f}\033[0m'
+            color = settings.COLOR_BLUE
+            string = '\t{} ' + '-'*(13-len(name)) + color + ' {:04.3f}' + settings.COLOR_BLACK
             string = string.format(name, score)
             ok.append(string)
     ok.sort()
