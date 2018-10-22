@@ -14,15 +14,18 @@ def ExecuteCommandSubprocess(command, *args):
 
 layout = [
     [gui.Text('Simulator output...', size=(40,1))],
-    [gui.Output(size=(88,20), font='Courier 10')],
+    [gui.Text('Number of games played',size=(18,1)),
+     gui.In('10000', size=(7,1), key='N_TEST')],
+    [gui.Output(size=(88,40), font='Courier 10')],
     [gui.ReadButton('Run'), gui.Button('Exit')]
 ]
 
 window = gui.Window('Dojo Simulator').Layout(layout)
 
 while True:
-    (button, value) = window.Read()
+    button, values = window.Read()
     if button == 'Run':
-        ExecuteCommandSubprocess('python', './main.py')
+        ExecuteCommandSubprocess('clear')
+        ExecuteCommandSubprocess('python', './main.py', '-n', values['N_TEST'])
     if button == 'Exit' or button is None:
         break

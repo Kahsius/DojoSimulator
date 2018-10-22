@@ -51,7 +51,7 @@
   {
       "name": "Amalrik",
       "power": 6,
-      "damage": 2,
+      "damage": 1,
       "talent": {
           "target": "owner",
           "value": 3,
@@ -167,7 +167,7 @@
   {
       "name": "Marcus",
       "power": 7,
-      "damage": 1,
+      "damage": 2,
       "talent": {
           "target": "opp",
           "effect": "stop_talent"
@@ -196,7 +196,7 @@
   {
       "name": "Orsun",
       "power": 6,
-      "damage": 5,
+      "damage": 4,
       "talent": {
           "target": "opp",
           "effect": "echange_p"

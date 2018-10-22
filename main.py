@@ -81,6 +81,12 @@ if __name__ == '__main__':
 
     mean_mastery_activation = anzr.rate_mastery(results)
     print("\nActivation de maitrise moyenne par combat")
-    #TODO debugger l'analyzer de mastery_activated
-
+    strings = []
+    for i in range(len(names)):
+        string = '\t{} ' + '-'*(13-len(names[i])) + ' {:04.3f}'
+        string = string.format(names[i], mean_mastery_activation[i])
+        strings.append(string)
+    strings.sort()
+    for s in strings:
+        print(s)
 
