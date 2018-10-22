@@ -6,7 +6,11 @@ Dojo Simulator is a python script running a set of matches of the prototype game
 
 ## Usage
 
-Simply clone the project and run the following command :
+First clone the project and go in the newly created directory, then run the following command:
+```shell
+pip install -r requirements.txt
+```
+This will ensure that you have all the dependencies required by the project. Then, simply clone the project and run the following command :
 ```shell
 python main.js -n N_TEST -v
 ```
