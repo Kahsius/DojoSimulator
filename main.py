@@ -1,16 +1,12 @@
-#!/usr/bin/python3
-
 import sys
 from os import getcwd
-sys.path.insert(0, getcwd()+'/scripts')
+sys.path.insert(0, getcwd()+'/src')
 
 import settings
 settings.init(sys.argv)
 
 import analyzer as anzr
 
-from subprocess import run
-from pdb import set_trace
 from multiprocessing import Pool
 from Game import Game
 
@@ -84,5 +80,7 @@ if __name__ == '__main__':
         print(string.format(elem, mean_glyphs[0][i], mean_glyphs[1][i]))
 
     mean_mastery_activation = anzr.rate_mastery(results)
-    print("\nActivation de maîtrise moyenne par combat")
-    #TODO débugger l'analyzer de mastery_activated
+    print("\nActivation de maitrise moyenne par combat")
+    #TODO debugger l'analyzer de mastery_activated
+
+
