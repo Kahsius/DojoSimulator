@@ -1,12 +1,15 @@
+
 import settings
 import random
 import json
+from collections import Counter
 import pdb
 from pdb import set_trace
 from Player import Player
-from Card import Card
+from Prodigy import Prodigy
 from Log import Log
 from Voie import Voie
+from utils import get_names
 
 import Debug as debug
 
@@ -26,7 +29,7 @@ class Game:
             self.players[i].id = i
             self.players[i].hp = settings.BASE_HP
 
-        # Définition des opposants
+        # Definition des opposants
         for i in range(2):
             self.players[i].opp = self.players[(i + 1) % 2]
 
@@ -43,9 +46,9 @@ class Game:
             self.players[0].prodigies = selected[0:4]
             self.players[1].prodigies = selected[4:8]
             for i in range(4):
-                self.players[0].prodigies[i] = Card(
+                self.players[0].prodigies[i] = Prodigy(
                     self.players[0].prodigies[i], owner=self.players[0])
-                self.players[1].prodigies[i] = Card(
+                self.players[1].prodigies[i] = Prodigy(
                     self.players[1].prodigies[i], owner=self.players[1])
 
             for p in self.players:
@@ -55,7 +58,7 @@ class Game:
                 debug.verbose('-'*30)
                 
 
-        # Génère les voies
+        # Genere les voies
         self.generate_voies()
 
     def run(self):
@@ -91,7 +94,7 @@ class Game:
                     debug.verbose("Regard: P" + str(p.id)+ " " + str(p.hand[index]) + " sur voie " + str(p.opp.get_index_maitrise()))
                     p.played_glyphs = p.played_glyphs + [p.hand[index]]
                     del p.hand[index]
-                    # On fait en sorte que le joueur avec Regard joue forcément deuxième
+                    # On fait en sorte que le joueur avec Regard joue forcement deuxieme
                     p1 = p
                     p2 = self.players[(i+1)%2]
                     break
@@ -104,7 +107,7 @@ class Game:
                         self.log.values['glyphs'][p.id][i] = self.log.values['glyphs'][p.id][i] + 1
                 debug.verbose(p.played_prodigy.name + "_" + str(p.id) + " joue " + str(p.played_glyphs))
 
-            # Résolution des Voies
+            # Resolution des Voies
             p1, p2 = self.players
             for i in range(4):
                 if p1.played_glyphs[i] > p2.played_glyphs[i]:
@@ -120,7 +123,7 @@ class Game:
                         winner = 0
                 self.score_voies = self.score_voies + [winner]
 
-            # Détermination du gagnant
+            # Determination du gagnant
             winner = self.get_winner()
             if winner < 2:
                 self.log.values['winners_prodigies'].append(
@@ -131,7 +134,7 @@ class Game:
             self.players[(
                 winner + 1) % 2].winner = False if winner != 2 else True
 
-            # Application des Talents éventuels
+            # Application des Talents eventuels
             for p in self.players:
                 if p.played_prodigy.talent.need_winner:
                     debug.verbose(p.played_prodigy.name + "_" + str(p.id) + " utilise Talent")
@@ -140,15 +143,15 @@ class Game:
             # Application des effets des Voies
             for i in range(2):
                 p = self.players[i]
-                # On étudie toutes les voies
+                # On etudie toutes les voies
                 for j in range(4):
                     v = self.voies[j]
-                    # Un des joueurs a remporté la voie
+                    # Un des joueurs a remporte la voie
                     p1_win = self.score_voies[j] < 0 and i == 0
                     p2_win = self.score_voies[j] > 0 and i == 1
                     if p1_win or p2_win:
                         debug.verbose(p.played_prodigy.name + "_" + str(p.id) + " remporte " + v.element)
-                        # S'il peut activer sa maîtrise
+                        # S'il peut activer sa maitrise
                         element_ok = v.element == p.played_prodigy.element
                         damage = p.played_prodigy.mastery.need_victory
                         damage_and_winner = p.winner and damage
@@ -163,7 +166,7 @@ class Game:
                             v.capacity.owner = p
                             v.capacity.execute_capacity(self.turn)
 
-            # Dégâts du ou des gagnant
+            # Degats du ou des gagnant
             p1, p2 = self.players
             if p1.winner:
                 debug.verbose(p1.played_prodigy.name + "_" + str(p1.id) + " inflige " + str(p1.played_prodigy.get_d()))
@@ -201,14 +204,41 @@ class Game:
                 self.log.values['ko'] = True
                 return False
 
-        # Si les 4 Prodiges ont été joués
+        # Si les 4 Prodiges ont ete joues
         if self.turn == 4:
             return False
 
         # Sinon
         return True
 
+    def generate_log(self):
+        # TODO Besoins pour le log
+        # PVs de chaque joueurs
+        # glyphes dans chaque main au debut (bouger de la)
+        # Prodiges joues
+        # Prodiges restants
+        # Pour redondance, elem, power et damage de chaque prodige ?
+
+        names = get_names()
+
+        # Ecriture du log
+        p1 = next((p for p in self.players if p.id == 0))
+        p2 = next((p for p in self.players if p.id == 1))
+
+        pv1, pv2 = p1.hp, p2.hp
+        glyphs1 = list(Counter(p1.hand).values())
+        glyphs2 = list(Counter(p2.hand).values())
+
+        # TODO continuer ici
+
+
+
+
+
     def clean_round(self):
+
+
+
         # Nettoyage des joueurs
         for p in self.players:
             for i in range(len(p.played_glyphs)):
@@ -217,7 +247,7 @@ class Game:
             p.played_glyphs = []
             p.played_prodigy = None
 
-        # Si le second joueur a gagné ou s'il y a égalité
+        # Si le second joueur a gagne ou s'il y a egalite
         if self.players[1].winner:
             p1, p2 = self.players
             self.players = [p2, p1]
@@ -231,7 +261,7 @@ class Game:
         winner = sum(self.score_voies)
         p1, p2 = self.players
 
-        # Qui a gagné le plus de Voies
+        # Qui a gagne le plus de Voies
         if winner < 0:
             return (0)
         elif winner > 0:
@@ -249,7 +279,7 @@ class Game:
                 elif p1.hp > p2.hp:
                     return (1)
                 else:
-                    # Si jamais il y a une parfaite égalité
+                    # Si jamais il y a une parfaite egalite
                     return (2)
 
     def generate_voies(self):

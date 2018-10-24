@@ -1,6 +1,6 @@
 from Capacity import Capacity
 
-class Card:
+class Prodigy:
     def __init__(self, json, owner):
         self.owner = owner
         self.name = json['name']
@@ -16,6 +16,7 @@ class Card:
         self.protected = False
         self.advantaged = False
         self.initiative = False
+        self.is_played = False
 
     def get_p(self):
         return(self.power_base + self.power)
