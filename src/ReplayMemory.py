@@ -1,21 +1,19 @@
 import random
 from collections import namedtuple
 
-Triplet = namedtuple('StateAction', ('state', 'action', 'reward'))
+Row = namedtuple('StateAction', ('state_start', 'action', 'state_end', 'reward'))
 
 class ReplayMemory(object):
 
-    def __init__(self, capacity):
-        self.capacity = capacity
+    def __init__(self):
         self.memory = []
         self.position = 0
 
     def push(self, *args):
-        """Saves a triplet."""
-        if len(self.memory) < self.capacity:
-            self.memory.append(None)
-        self.memory[self.position] = Triplet(*args)
-        self.position = (self.position + 1) % self.capacity
+        """Saves a row."""
+        self.memory.append(None)
+        self.memory[self.position] = Row(*args)
+        self.position = self.position + 1 
 
     def sample(self, batch_size):
         return random.sample(self.memory, batch_size)
@@ -23,4 +21,7 @@ class ReplayMemory(object):
     def __len__(self):
         return len(self.memory)
 
-
+    def merge(self, memories):
+        for m in memories:
+            for row in m:
+                self.push(*row)

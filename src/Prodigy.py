@@ -16,7 +16,7 @@ class Prodigy:
         self.protected = False
         self.advantaged = False
         self.initiative = False
-        self.is_played = False
+        self.available = True
 
     def get_p(self):
         return(self.power_base + self.power)

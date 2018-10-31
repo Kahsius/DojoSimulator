@@ -41,10 +41,10 @@ class Player:
 
 
     def choose_prodigy(self, turn):
-        # On récupère l'index
+        # On recupere l'index
         index = self.prodigies_order[turn]
         self.played_prodigy = self.prodigies[index]
-        self.prodigies[index].is_played = True
+        self.prodigies[index].available = False
         if settings.VERBOSE:
             debug.verbose("Player " + str(self.id) + " joue " + self.played_prodigy.name)
 
@@ -69,7 +69,7 @@ class Player:
         g_regard = g[0] if self.opp.has_regard else -1
         
         if self.has_regard:
-            g_opp = self.opp.played_glyphs[self.get_index_maitrise()]
+            g_opp = self.opp.played_glyphs[0]
             # Si a le glyphe juste au dessus sinon feinte
             g_maitrise = g_opp+1 if g_opp+1 in self.hand else 0
             g.append(g_maitrise)
@@ -117,7 +117,7 @@ class Player:
             g[index_g], g[index_m] = g[index_m], g[index_g]
             self.has_regard = False
         # Si personne n'a le regard
-        else:
+        else :
             index_g = g.index(max(g))
             index_m = self.get_index_maitrise()
             index_m_opp = self.opp.get_index_maitrise()
@@ -129,3 +129,9 @@ class Player:
     def get_index_maitrise(self):
         elements = ['anar', 'sulimo', 'ulmo', 'wilwar']
         return(elements.index(self.played_prodigy.element))
+
+    def get_action(self):
+        glyphs = self.played_glyphs
+        action1 = [glyphs.count(i) for i in range(6)]
+        action2 = sorted(range(len(glyphs)), key=lambda k: glyphs[k])
+        return((action1, action2))
