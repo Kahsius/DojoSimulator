@@ -6,13 +6,9 @@ import settings
 settings.init(sys.argv)
 
 import analyzer as anzr
-from pdb import set_trace
 
 from multiprocessing import Pool
 from Game import Game
-from ReplayMemory import ReplayMemory
-
-#TODO: continuer les générateur d'actions dans utils.py et terminer le DQN
 
 
 def get_results(i):
@@ -21,17 +17,12 @@ def get_results(i):
     return(results)
 
 if __name__ == '__main__':
-    get_results(0)
+    # run('clear')
 
     print("Test running...")
     pool = Pool()
     results = pool.map(get_results, range(settings.N_TEST))
     print("... done\n")
-
-    set_trace()
-    memory = ReplayMemory()
-    memory.merge([r['memory'] for r in results])
-
 
     # Start analysis
     # print("Win Rate par round")

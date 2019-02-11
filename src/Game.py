@@ -2,15 +2,14 @@
 import settings
 import random
 import json
+from collections import Counter
+import pdb
 from pdb import set_trace
-
-import utils
 from Player import Player
-from DQN import DQN
 from Prodigy import Prodigy
 from Log import Log
 from Voie import Voie
-
+from utils import get_names
 
 import Debug as debug
 
@@ -22,9 +21,6 @@ class Game:
         self.voies = []
         self.turn = 0
         self.log = Log()
-        self.previous_state = None
-        self.previous_action = None
-        self.memory = []
 
         # Creation des joueurs
         for i in range(2):
@@ -98,25 +94,18 @@ class Game:
                     debug.verbose("Regard: P" + str(p.id)+ " " + str(p.hand[index]) + " sur voie " + str(p.opp.get_index_maitrise()))
                     p.played_glyphs = p.played_glyphs + [p.hand[index]]
                     del p.hand[index]
+                    # On fait en sorte que le joueur avec Regard joue forcement deuxieme
+                    p1 = p
+                    p2 = self.players[(i+1)%2]
                     break
 
-            # On recupere l'etat de la partie pour le DQN
-            state = self.generate_log()
-            if self.previous_state == None :
-                self.previous_state = state
-            else :
-                self.memory.append((self.previous_state, self.previous_action, state, 0))
-                self.previous_state = state
-
             # Choix des Glyphes
-            for p in self.players:
+            for p in [p1, p2]:
                 p.get_choosen_glyphs()
                 for i in range(4):
                     if p.played_glyphs[i] > 0:
                         self.log.values['glyphs'][p.id][i] = self.log.values['glyphs'][p.id][i] + 1
                 debug.verbose(p.played_prodigy.name + "_" + str(p.id) + " joue " + str(p.played_glyphs))
-                if p.id == 0:
-                    self.previous_action = p.get_action()
 
             # Resolution des Voies
             p1, p2 = self.players
@@ -202,13 +191,9 @@ class Game:
         elif p1.hp < p2.hp:
             self.log.values['winner'] = p2.id
 
-        reward = 1 if self.log.values['winner'] == 0 else 0
-        self.memory.append((self.previous_state, self.previous_action, None, reward))
-
         self.log.values['hp'] = [p1.hp, p2.hp]
         self.log.values['glyphs_winner'] = self.log.values['glyphs'][self.log.values['winner']]
         self.log.values['end_turn'] = self.turn
-        self.log.values['memory'] = self.memory
 
         return (self.log)
 
@@ -227,38 +212,32 @@ class Game:
         return True
 
     def generate_log(self):
-        """
-        Get round state. By convention, the trained player is player with id == 0.
-        """
-        
-        names = utils.get_names()
+        # TODO Besoins pour le log
+        # PVs de chaque joueurs
+        # glyphes dans chaque main au debut (bouger de la)
+        # Prodiges joues
+        # Prodiges restants
+        # Pour redondance, elem, power et damage de chaque prodige ?
+
+        names = get_names()
 
         # Ecriture du log
         p1 = next((p for p in self.players if p.id == 0))
         p2 = next((p for p in self.players if p.id == 1))
 
-        pv1, pv2 = [p1.hp], [p2.hp]
-        glyphs1 = [p1.hand.count(i) for i in range(1,6)]
-        glyphs2 = [p2.hand.count(i) for i in range(1,6)]
+        pv1, pv2 = p1.hp, p2.hp
+        glyphs1 = list(Counter(p1.hand).values())
+        glyphs2 = list(Counter(p2.hand).values())
 
-        prodigies1 = [p for p in p1.prodigies if p.available]
-        prodigies2 = [p for p in p2.prodigies if p.available]
-        prodigies1 = utils.get_list_ids(prodigies1)
-        prodigies2 = utils.get_list_ids(prodigies2)
+        # TODO continuer ici
 
-        played_prodigy1 = utils.get_list_ids([p1.played_prodigy])
-        played_prodigy2 = utils.get_list_ids([p2.played_prodigy])
 
-        regard = [-1]
-        if p1.has_regard : regard = p2.played_glyphs
 
-        log_p1 = pv1 + glyphs1 + prodigies1 + played_prodigy1
-        log_p2 = pv2 + glyphs2 + prodigies2 + played_prodigy2 + regard
-    
-        return(log_p1 + log_p2)
 
 
     def clean_round(self):
+
+
 
         # Nettoyage des joueurs
         for p in self.players:

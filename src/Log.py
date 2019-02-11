@@ -1,4 +1,4 @@
-from ReplayMemory import ReplayMemory
+from ReplayMemory import Triplet
 
 class Log:
     def __init__(self):
@@ -13,4 +13,7 @@ class Log:
         self.values['glyphs_winner'] = []
         self.values['end_turn'] = 0
         self.values['mastery_activated'] = [[False]*4, [False]*4]
-        self.values['memory'] = None
+
+    def to_triplet(self):
+        pass
+
