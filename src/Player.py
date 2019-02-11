@@ -15,6 +15,7 @@ class Player:
         self.has_regard = False
         self.winner = False
         self.id = -1
+        self.defense = False
         
         glyph = 5 if order == 0 else 4
         self.hand = self.hand + [glyph]
@@ -48,15 +49,19 @@ class Player:
             debug.verbose("Player " + str(self.id) + " joue " + self.played_prodigy.name)
 
 
-    def get_random_glyphe_index(self, feinte_allowed = True):
+    def get_random_glyphe_index(self, feinte_allowed = True, is_max = False):
         h = self.hand
         if feinte_allowed:
             return random.randint(0,len(h)-1)
+        elif is_max:
+            maxi = max(self.hand)
+            return self.hand.index(maxi)
         else :
             for i in range(len(h)-1):
                 if h[i] != 0:
                     return i
         return -1
+
 
     def get_choosen_glyphs(self):
 
@@ -125,6 +130,40 @@ class Player:
 
         self.played_glyphs = g
 
+
     def get_index_maitrise(self):
         elements = ['anar', 'sulimo', 'ulmo', 'wilwar']
         return(elements.index(self.played_prodigy.element))
+
+    def get_defense_glyphs(self):
+        p = self
+        if self.has_regard:
+            if self.hand[0] == 0:
+                max_glyph = min(max(p.hand), p.played_prodigy.get_p())
+                range_list = list(range(max_glyph+1))
+                range_list.reverse()
+                for j in range_list:
+                    if j in p.hand:
+                        index = p.hand.index(j)
+                        break
+        else:
+            max_glyph = min(max(p.hand), p.played_prodigy.get_p())
+            range_list = list(range(max_glyph+1))
+            range_list.reverse()
+            for j in range_list:
+                if j in p.hand:
+                    index = p.hand.index(j)
+                    self.played_glyphs += [j]
+                    del self.hand[index]
+                    break
+        for _ in range(4-len(self.played_glyphs)):
+            index_feinte = self.hand.index(0)
+            self.played_glyphs += [0]
+            del self.hand[index_feinte]
+
+        index_glyph = self.played_glyphs.index(max(self.played_glyphs))
+        index_maitrise = self.get_index_maitrise()
+        tmp = self.played_glyphs[index_maitrise]
+        self.played_glyphs[index_maitrise] = self.played_glyphs[index_glyph]
+        self.played_glyphs[index_glyph] = tmp
+

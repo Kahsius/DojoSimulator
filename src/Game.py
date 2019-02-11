@@ -82,13 +82,35 @@ class Game:
                     debug.verbose(p.played_prodigy.name + "_" + str(p.id) + " utilise Talent")
                     p.played_prodigy.talent.execute_capacity(self.turn)
 
+            # Determine player play style
+            for i in range(2):
+                p = self.players[i]
+                p.defense = (random.random() < settings.P_DEFENSE)
+                self.log.values['defense'][p.id].append(p.defense)
+
             # Joue Glyphe en cas de Regard
             p1, p2 = self.players
             for i in range(2):
                 p = self.players[i]
                 if p.opp.has_regard:
-                    index = p.get_random_glyphe_index()
-                    debug.verbose("Regard: P" + str(p.id)+ " " + str(p.hand[index]) + " sur voie " + str(p.opp.get_index_maitrise()))
+                    if p.defense :
+                        if p.opp.get_index_maitrise() == p.get_index_maitrise():
+                            max_glyph = min(max(p.hand), 
+                                    p.played_prodigy.get_p())
+                            range_list = list(range(max_glyph+1))
+                            range_list.reverse()
+                            for j in range_list:
+                                if j in p.hand:
+                                    index = p.hand.index(j)
+                                    break
+                        else:
+                            index = p.hand.index(0)
+                    else:
+                        index = p.get_random_glyphe_index()                        
+
+                    debug.verbose("Regard: P" + str(p.id)+ " " + 
+                            str(p.hand[index]) + " sur voie " + 
+                            str(p.opp.get_index_maitrise()))
                     p.played_glyphs = p.played_glyphs + [p.hand[index]]
                     del p.hand[index]
                     # On fait en sorte que le joueur avec Regard joue forcément deuxième
@@ -98,7 +120,10 @@ class Game:
 
             # Choix des Glyphes
             for p in [p1, p2]:
-                p.get_choosen_glyphs()
+                if p.defense :
+                    p.get_defense_glyphs()
+                else:
+                    p.get_choosen_glyphs()
                 for i in range(4):
                     if p.played_glyphs[i] > 0:
                         self.log.values['glyphs'][p.id][i] = self.log.values['glyphs'][p.id][i] + 1
@@ -216,6 +241,7 @@ class Game:
                     p.hand = p.hand + [0]
             p.played_glyphs = []
             p.played_prodigy = None
+            p.defense = False
 
         # Si le second joueur a gagné ou s'il y a égalité
         if self.players[1].winner:

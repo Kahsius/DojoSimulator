@@ -2,13 +2,14 @@ import sys
 
 def init(argv):
     global VERBOSE, DEBUG_PRODIGES, TOLERANCE_COLOR, BASE_HP, N_TEST
-    global P_COUNTER_OPP_MASTERY
+    global P_COUNTER_OPP_MASTERY, P_DEFENSE
     global COLOR_RED, COLOR_BLUE, COLOR_BLACK
 
-    DEBUG_PRODIGES = ['Faine']
+    DEBUG_PRODIGES = []
     TOLERANCE_COLOR = 0.04
     BASE_HP = 12
     P_COUNTER_OPP_MASTERY = .3
+    P_DEFENSE = .25
 
     if sys.platform == 'linux2':
         COLOR_RED = '\033[31m'

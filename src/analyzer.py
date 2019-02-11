@@ -35,12 +35,13 @@ def win_rates_global(results):
 
     for match in results:
         id_winner = match['winner']
-        for duel in match['duels']:
+        for k, duel in enumerate(match['duels']):
             index_win = names.index(duel[id_winner])
             index_lose = names.index(duel[(id_winner+1)%2])
-            victory[index_win] = victory[index_win] + 1
-            played[index_win] = played[index_win] + 1
-            played[index_lose] = played[index_lose] + 1
+            if not match['defense'][id_winner][k]:
+                victory[index_win] = victory[index_win] + 1
+                played[index_win] = played[index_win] + 1
+                played[index_lose] = played[index_lose] + 1
 
     results = {}
     results['names'] = names
@@ -48,6 +49,30 @@ def win_rates_global(results):
 
     return(results)
 
+
+def win_rates_global_defense(results):
+    names = get_names()
+    victory = []
+    played = []
+
+    victory = np.zeros(len(names))
+    played = np.zeros(len(names))
+
+    for match in results:
+        id_winner = match['winner']
+        for k, duel in enumerate(match['duels']):
+            index_win = names.index(duel[id_winner])
+            index_lose = names.index(duel[(id_winner+1)%2])
+            if match['defense'][id_winner][k]:
+                victory[index_win] = victory[index_win] + 1
+                played[index_win] = played[index_win] + 1
+                played[index_lose] = played[index_lose] + 1
+
+    results = {}
+    results['names'] = names
+    results['rates'] = victory/played
+
+    return(results)
 
 def get_names():
     names = []

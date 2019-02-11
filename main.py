@@ -30,6 +30,32 @@ if __name__ == '__main__':
     # for i in range(len(wr['names'])):
         # print(wr['names'][i] + " - " + str(wr['rates'][i]))
 
+    print("Win Rate par partie (defense)")
+    wr = anzr.win_rates_global_defense(results)
+    ok = []
+    notok = []
+    for i in range(len(wr['names'])):
+        name = wr['names'][i]
+        score = wr['rates'][i]
+        if abs(score - .5) > settings.TOLERANCE_COLOR:
+            color = settings.COLOR_RED
+            string = '\t{} ' + '-'*(13-len(name)) + color + ' {:04.3f}' + settings.COLOR_BLACK
+            string = string.format(name, score)
+            notok.append(string)
+        else:
+            color = settings.COLOR_BLUE
+            string = '\t{} ' + '-'*(13-len(name)) + color + ' {:04.3f}' + settings.COLOR_BLACK
+            string = string.format(name, score)
+            ok.append(string)
+    ok.sort()
+    notok.sort()
+    print("-- OK")
+    for s in ok:
+        print(s)
+    print("-- not OK")
+    for s in notok:
+        print(s)
+
     print("Win Rate par partie")
     wr = anzr.win_rates_global(results)
     ok = []

@@ -119,7 +119,7 @@
       "talent": {
           "target": "opp",
           "condition": "defaite",
-          "value": -2,
+          "value": -200,
           "effect": "modif_hp"
       },
       "mastery": {
