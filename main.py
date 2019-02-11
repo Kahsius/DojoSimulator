@@ -19,6 +19,9 @@ def get_results(i):
 if __name__ == '__main__':
     # run('clear')
 
+    # for _ in range(settings.N_TEST):
+        # Game().run()
+
     print("Test running...")
     pool = Pool()
     results = pool.map(get_results, range(settings.N_TEST))

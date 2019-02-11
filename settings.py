@@ -9,7 +9,7 @@ def init(argv):
     TOLERANCE_COLOR = 0.04
     BASE_HP = 12
     P_COUNTER_OPP_MASTERY = .3
-    P_DEFENSE = .25
+    P_DEFENSE = .2
 
     if sys.platform == 'linux2':
         COLOR_RED = '\033[31m'

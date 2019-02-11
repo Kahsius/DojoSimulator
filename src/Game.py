@@ -86,6 +86,8 @@ class Game:
             for i in range(2):
                 p = self.players[i]
                 p.defense = (random.random() < settings.P_DEFENSE)
+                # if p.played_prodigy.name == 'Persephone':
+                    # p.defense = True
                 self.log.values['defense'][p.id].append(p.defense)
 
             # Joue Glyphe en cas de Regard
