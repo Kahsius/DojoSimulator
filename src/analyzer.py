@@ -2,8 +2,6 @@ from pdb import set_trace
 import json
 import numpy as np
 
-from utils import get_names
-
 def win_rates(results):
     names = get_names()
     victory = []
@@ -50,6 +48,15 @@ def win_rates_global(results):
 
     return(results)
 
+
+def get_names():
+    names = []
+    with open('data/prodigies.json') as json_data:
+        d = json.load(json_data)
+        for prodigy in d:
+            names = names + [prodigy['name']]
+    
+    return(names)
 
 def glyphs_win_rate(results):
     glyphs_winners = [r['glyphs'][r['winner']] for r in results]

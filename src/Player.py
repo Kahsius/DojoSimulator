@@ -44,7 +44,6 @@ class Player:
         # On récupère l'index
         index = self.prodigies_order[turn]
         self.played_prodigy = self.prodigies[index]
-        self.prodigies[index].is_played = True
         if settings.VERBOSE:
             debug.verbose("Player " + str(self.id) + " joue " + self.played_prodigy.name)
 
