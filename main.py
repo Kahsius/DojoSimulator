@@ -9,6 +9,7 @@ import analyzer as anzr
 
 from multiprocessing import Pool
 from Game import Game
+from pdb import set_trace
 
 
 def get_results(i):
@@ -32,11 +33,10 @@ if __name__ == '__main__':
 
     print("Win Rate par partie")
     wr = anzr.win_rates_global(results)
+    wr = sorted(wr.items(), key=lambda x: x[1])
     ok = []
     notok = []
-    for i in range(len(wr['names'])):
-        name = wr['names'][i]
-        score = wr['rates'][i]
+    for name, score in wr:
         if abs(score - .5) > settings.TOLERANCE_COLOR:
             color = settings.COLOR_RED
             string = '\t{} ' + '-'*(13-len(name)) + color + ' {:04.3f}' + settings.COLOR_BLACK
@@ -70,23 +70,23 @@ if __name__ == '__main__':
     for s in strings:
         print(s)
 
-    mean_glyphs = anzr.glyphs_win_rate(results)
-    print("\nNombre moyen d'activation de chaque voie:")
-    elements = ['anar', 'sulimo', 'ulmo', 'wilwar']
-    print("\tElement" + " "*5 + "Winner" + " "*3 + "Loser")
-    for i in range(4):
-        elem = elements[i]
-        string = '\t{}   ' + ' '*(9-len(elem)) + '{:03.2f}' + ' '*5 + '{:03.2f}'
-        print(string.format(elem, mean_glyphs[0][i], mean_glyphs[1][i]))
+    # mean_glyphs = anzr.glyphs_win_rate(results)
+    # print("\nNombre moyen d'activation de chaque voie:")
+    # elements = ['anar', 'sulimo', 'ulmo', 'wilwar']
+    # print("\tElement" + " "*5 + "Winner" + " "*3 + "Loser")
+    # for i in range(4):
+        # elem = elements[i]
+        # string = '\t{}   ' + ' '*(9-len(elem)) + '{:03.2f}' + ' '*5 + '{:03.2f}'
+        # print(string.format(elem, mean_glyphs[0][i], mean_glyphs[1][i]))
 
-    mean_mastery_activation = anzr.rate_mastery(results)
-    print("\nActivation de maitrise moyenne par combat")
-    strings = []
-    for i in range(len(names)):
-        string = '\t{} ' + '-'*(13-len(names[i])) + ' {:04.3f}'
-        string = string.format(names[i], mean_mastery_activation[i])
-        strings.append(string)
-    strings.sort()
-    for s in strings:
-        print(s)
+    # mean_mastery_activation = anzr.rate_mastery(results)
+    # print("\nActivation de maitrise moyenne par combat")
+    # strings = []
+    # for i in range(len(names)):
+        # string = '\t{} ' + '-'*(13-len(names[i])) + ' {:04.3f}'
+        # string = string.format(names[i], mean_mastery_activation[i])
+        # strings.append(string)
+    # strings.sort()
+    # for s in strings:
+        # print(s)
 

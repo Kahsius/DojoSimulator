@@ -1,6 +1,7 @@
 import Debug as debug
 import settings
 from pdb import set_trace
+from copy import deepcopy
 import random
 
 class Player:
@@ -15,7 +16,24 @@ class Player:
         self.has_regard = False
         self.winner = False
         self.id = -1
-        
+        self.COMBINAISONS = {
+            1: [[1]],
+            2: [[2], [1, 1]],
+            3: [[3], [2, 1], [1, 1, 1]],
+            4: [[4], [3, 1], [2, 2], [2, 1, 1]],
+            5: [[5], [4, 1], [3, 2], [3, 1, 1], [2, 2, 1], [2, 1, 1, 1]],
+            6: [[5, 1], [4, 2], [3, 3], [4, 1, 1], [3, 2, 1], [2, 2, 2],
+                [2, 2, 1, 1], [3, 1, 1, 1]],
+            7: [[5, 2], [4, 3], [5, 1, 1], [4, 2, 1], [3, 3, 1], [3, 2, 2],
+                [4, 1, 1, 1], [3, 2, 1, 1], [2, 2, 2, 1]],
+            8: [[5, 3], [4, 4], [5, 2, 1], [4, 3, 1], [3, 3, 2], [4, 2, 2],
+                [4, 2, 1, 1], [3, 3, 1, 1], [5, 1, 1, 1], [3, 2, 2, 1]],
+            9: [[5, 4], [4, 4, 1], [4, 3, 2], [5, 2, 2], [5, 3, 1],
+                [5, 2, 1, 1], [4, 3, 1, 1], [4, 2, 2, 1], [3, 2, 2, 2]]
+        }
+        for i in range(1, 10):
+            random.shuffle(self.COMBINAISONS[i])
+
         glyph = 5 if order == 0 else 4
         self.hand = self.hand + [glyph]
         random.shuffle(self.hand)
@@ -58,6 +76,7 @@ class Player:
                     return i
         return -1
 
+
     def get_choosen_glyphs(self):
 
         p = self.played_prodigy.get_p()
@@ -66,7 +85,7 @@ class Player:
         g = self.played_glyphs
         # Récupère le glyphe éventuellement joué à cause du Regard
         g_regard = g[0] if self.opp.has_regard else -1
-        
+
         if self.has_regard:
             g_opp = self.opp.played_glyphs[self.get_index_maitrise()]
             # Si a le glyphe juste au dessus sinon feinte
@@ -76,16 +95,32 @@ class Player:
             sum_g = sum_g + g_maitrise
 
         # On complète la main avec des Glyphes non Feinte
-        l = len(self.hand)
-        for i in range(l):
-            if sum_g + self.hand[l-i-1] <= p and self.hand[l-i-1] != 0 :
-                g = g + [self.hand[l-i-1]]
-                sum_g = sum_g + self.hand[l-i-1]
-                del self.hand[l-i-1]
-            # Dans 80% des cas, le dernier Glyphe sera une feinte
-            if len(g) == 3 and random.random() > .2:
+        length = len(g)
+        diff = p - sum_g
+        found = []
+        ok = False
+        for potential in reversed(range(1, diff+1)):
+            for possibility in self.COMBINAISONS[potential]:
+                if len(possibility) + length <= 4:
+                    hand_copy = deepcopy(self.hand)
+                    ok = True
+                    for glyph in possibility:
+                        if glyph in hand_copy:
+                            hand_copy.remove(glyph)
+                        else:
+                            ok = False
+                            break
+                if ok:
+                    found = possibility
+                    break
+            if ok:
                 break
-        
+
+        for glyph in found:
+            index = self.hand.index(glyph)
+            g = g + [self.hand[index]]
+            del self.hand[index]
+
         # Quand on peut plus, on complète ce qui manque avec des Feintes
         for i in range(4-len(g)):
             index = self.hand.index(0)
@@ -120,10 +155,12 @@ class Player:
             index_g = g.index(max(g))
             index_m = self.get_index_maitrise()
             index_m_opp = self.opp.get_index_maitrise()
-            index = index_m if random.random() > settings.P_COUNTER_OPP_MASTERY else index_m_opp
+            counter_opp_mastery = (random.random() > settings.P_COUNTER_OPP_MASTERY)
+            index = index_m if counter_opp_mastery else index_m_opp
             g[index], g[index_g] = g[index_g], g[index]
 
         self.played_glyphs = g
+
 
     def get_index_maitrise(self):
         elements = ['anar', 'sulimo', 'ulmo', 'wilwar']
