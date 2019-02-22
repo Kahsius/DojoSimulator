@@ -43,8 +43,8 @@ def win_rates_global(results):
             played[index_lose] = played[index_lose] + 1
 
     results = {}
-    results['names'] = names
-    results['rates'] = victory/played
+    for i, name in enumerate(names):
+        results[name] = victory[i]/played[i]
 
     return(results)
 
@@ -55,7 +55,7 @@ def get_names():
         d = json.load(json_data)
         for prodigy in d:
             names = names + [prodigy['name']]
-    
+
     return(names)
 
 def glyphs_win_rate(results):
